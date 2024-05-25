@@ -124,7 +124,11 @@ function NavLink(props: {
   return (
     <Link to={props.link}>
       <DefaultLayout isSelected={props.isSelected} onClick={props.onClick}>
-        <DefaultSVG marginRight={13} marginLeft={5 + 10 * props.depth} />
+        <DefaultSVG
+          marginRight={13}
+          marginLeft={5 + 10 * props.depth}
+          isSelected={props.isSelected}
+        />
         <span>{props.Name}</span>
       </DefaultLayout>
     </Link>
@@ -148,7 +152,7 @@ function DefaultLayout({
         onClick={onClick}
         className={
           'cursor-pointer rounded-lg  flex items-center p-[0px_12px] m-[0px_12px_6px] h-[44px] ' +
-          (isSelected ? ' bg-slate-400 ' : ' hover:bg-hoverColor ')
+          (isSelected ? ' bg-main-purple text-white ' : ' hover:bg-hoverColor ')
         }
         style={{ width: 'cal(100%-24px)' }}
       >

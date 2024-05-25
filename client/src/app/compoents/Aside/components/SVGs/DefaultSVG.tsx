@@ -4,13 +4,16 @@ function DefaultSVG({
   size = 12,
   marginRight = 13,
   marginLeft = 5,
+  isSelected,
 }: {
   size?: number;
+  isSelected?: boolean;
   marginRight?: number;
   marginLeft?: number;
 }) {
   return (
     <svg
+      className={' ' + (isSelected === true ? 'text-white ' : 'text-black')}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       width={size}
@@ -22,7 +25,7 @@ function DefaultSVG({
     >
       <path
         fill="none"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
