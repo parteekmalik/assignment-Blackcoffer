@@ -11,7 +11,17 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'main-purple': '#7367F0',
+        hoverColor: '#f4f3f4',
+        AsideText: '#2f2b3de6',
+        AsideNavSectionText: '#2f2b3d66',
+      },
+      text:{
+        "custom-sm":".8125rem"
+      }
+    },
   },
   plugins: [],
 };
