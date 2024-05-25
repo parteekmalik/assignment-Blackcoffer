@@ -1,9 +1,13 @@
-import React, { MouseEventHandler, ReactNode, useState } from 'react';
+import { MouseEventHandler, ReactNode, useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  machPartialString,
+  NavigationCotext,
+} from './context/NavigationCotext';
 import DefaultSVG from './SVGs/DefaultSVG';
 import ExpendedSVG from './SVGs/ExpendedSVG';
-import { Link } from 'react-router-dom';
 
-type NestedList = {
+export type NestedList = {
   name: string;
   icon?: ReactNode;
   list?: NestedList[];
@@ -11,6 +15,9 @@ type NestedList = {
 };
 
 function MainNav({ navigation }: { navigation: NestedList[] }) {
+  const { pathname } = useLocation();
+  const { modifyPath, currNavigation } = useContext(NavigationCotext);
+
   const renderList = ({
     item,
     depth,
@@ -22,7 +29,15 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
     depth: number;
   }) => {
     if (item.type === 'last') {
-      return <NavLink Name={item.name} link={link} depth={depth}></NavLink>;
+      return (
+        <NavLink
+          isSelected={machPartialString({ currNavigation: pathname, link })}
+          Name={item.name}
+          onClick={() => modifyPath(link)}
+          link={link}
+          depth={depth}
+        ></NavLink>
+      );
     } else if (item.type === 'SectionTitleNav')
       return (
         <li>
@@ -35,6 +50,8 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
       return (
         <>
           <ExpandableNav
+            isOpened={machPartialString({ currNavigation, link })}
+            onClick={() => modifyPath(link)}
             headTitle={item.name}
             icon={depth >= 0 && !item.icon ? <DefaultSVG /> : item.icon}
           >
@@ -43,7 +60,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
                 return renderList({
                   item: Item,
                   depth: depth + 1,
-                  link: link + '/' + Item.name.toLowerCase(),
+                  link: link + '/' + Item.name.toLowerCase().replace(' ', '-'),
                 });
               })}
           </ExpandableNav>
@@ -56,7 +73,11 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
       style={{ scrollbarWidth: 'thin' }}
     >
       {navigation.map((item) =>
-        renderList({ item, depth: -1, link: item.name.toLowerCase() })
+        renderList({
+          item,
+          depth: -1,
+          link: '/' + item.name.toLowerCase().replace(' ', '-'),
+        })
       )}
     </ul>
   );
@@ -64,24 +85,26 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
 
 function ExpandableNav({
   icon,
+  isOpened,
   children,
   headTitle,
+  onClick,
 }: {
+  isOpened: boolean;
   icon: ReactNode;
+  onClick?: MouseEventHandler<HTMLDivElement>;
   children: ReactNode | ReactNode[];
   headTitle: string;
 }) {
-  const [isExpanded, setisExpanded] = useState(false);
-
   return (
     <DefaultLayout
-      onClick={() => setisExpanded((prev) => !prev)}
-      ulChildren={{ list: children, isvisible: isExpanded }}
+      onClick={onClick}
+      ulChildren={{ list: children, isvisible: isOpened }}
     >
       {icon}
       <span>{headTitle}</span>
       {children && (
-        <i className={' ml-auto ' + (isExpanded ? 'rotate-90' : '')}>
+        <i className={' ml-auto ' + (isOpened ? 'rotate-90' : '')}>
           <ExpendedSVG />
         </i>
       )}
@@ -91,16 +114,18 @@ function ExpandableNav({
 
 function NavLink(props: {
   Name: string;
-  onClick?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  onClick?: MouseEventHandler<HTMLDivElement>;
   depth: number;
   link: string;
+  isSelected: boolean;
 }) {
+  const { pathname } = useLocation();
+
   return (
     <Link to={props.link}>
-      <DefaultLayout onClick={() => console.log('clicked!!!')}>
+      <DefaultLayout isSelected={props.isSelected} onClick={props.onClick}>
         <DefaultSVG marginRight={13} marginLeft={5 + 10 * props.depth} />
         <span>{props.Name}</span>
-        <span>{props.depth}</span>
       </DefaultLayout>
     </Link>
   );
@@ -109,8 +134,10 @@ function NavLink(props: {
 function DefaultLayout({
   children,
   ulChildren,
+  isSelected,
   onClick,
 }: {
+  isSelected?: boolean;
   children: ReactNode;
   ulChildren?: { list: ReactNode; isvisible: boolean };
   onClick?: MouseEventHandler<HTMLDivElement>;
@@ -119,8 +146,10 @@ function DefaultLayout({
     <li>
       <div
         onClick={onClick}
-        className="cursor-pointer rounded-lg hover:bg-hoverColor flex 
-        items-center p-[0px_12px] m-[0px_12px_6px] h-[44px] "
+        className={
+          'cursor-pointer rounded-lg  flex items-center p-[0px_12px] m-[0px_12px_6px] h-[44px] ' +
+          (isSelected ? ' bg-slate-400 ' : ' hover:bg-hoverColor ')
+        }
         style={{ width: 'cal(100%-24px)' }}
       >
         {children}

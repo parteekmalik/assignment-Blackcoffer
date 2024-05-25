@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Layout from './app/layout';
 import CRM from './app/Routes/Dashboard/CRM';
+import NotFound from './app/Routes/NotFound';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
       {
         path: 'dashboard/CRM',
         Component: CRM,
+      },
+      {
+        path: '*',
+        Component: NotFound,
       },
     ],
   },
