@@ -34,7 +34,7 @@ function Aside({
     >
       <div className="flex gap-2 p-[20px_2px_20px_8px] items-end mx-[12px]">
         <LogoSVG />
-        <span className="text-xl font-semibold">Vuexy</span>
+        <span className="text-xl  font-semibold">Vuexy</span>
       </div>
       <NavigationCotextCoponent isdebug={false}>
         <MainNav

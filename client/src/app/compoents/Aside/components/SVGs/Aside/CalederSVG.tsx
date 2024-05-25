@@ -7,6 +7,7 @@ function CalederSVG() {
       viewBox="0 0 24 24"
       width="22"
       height="22"
+      style={{ marginRight: '8px' }}
     >
       <path
         fill="none"
