@@ -110,7 +110,7 @@ function ExpandableNav({
       isSelected={isSelected}
     >
       {icon}
-      <span className='text-AsideText'>{headTitle}</span>
+      <span className="text-AsideText">{headTitle}</span>
       {children && (
         <i className={' ml-auto ' + (isOpened ? 'rotate-90' : '')}>
           <ExpendedSVG />
@@ -137,7 +137,9 @@ function NavLink(props: {
           marginLeft={5 + 10 * props.depth}
           isSelected={props.isSelected}
         />
-        <span className='text-AsideText'>{props.Name}</span>
+        <span className={!props.isSelected ? 'text-AsideText' : 'text-white'}>
+          {props.Name}
+        </span>
       </DefaultLayout>
     </Link>
   );
