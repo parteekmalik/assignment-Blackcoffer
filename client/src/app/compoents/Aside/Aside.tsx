@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import MainNav from './components/expandableNavigation';
+import MainNav from './components/Navigation';
 import DashboardIcon from './components/SVGs/DashboardIcon';
 import LogoSVG from './components/SVGs/LogoSVG';
 import FontPagesSVG from './components/SVGs/FontPagesSVG';
