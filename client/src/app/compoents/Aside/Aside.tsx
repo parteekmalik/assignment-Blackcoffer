@@ -4,6 +4,14 @@ import DashboardIcon from './components/SVGs/Aside/DashboardIcon';
 import LogoSVG from './components/SVGs/LogoSVG';
 import FontPagesSVG from './components/SVGs/Aside/FontPagesSVG';
 import NavigationCotextCoponent from './components/context/NavigationCotext';
+import AcademySVG from './components/SVGs/Aside/AcademySVG';
+import LogisticsSVG from './components/SVGs/Aside/LogisticsSVG';
+import EmailSVG from './components/SVGs/Aside/EmailSVG';
+import ChatSVG from './components/SVGs/Aside/ChatSVG';
+import CalederSVG from './components/SVGs/Aside/CalederSVG';
+import InvoiceSVG from './components/SVGs/Aside/InvoiceSVG';
+import UserSVG from './components/SVGs/Aside/UserSVG';
+import EcommereceSVG from './components/SVGs/Aside/EcommereceSVG';
 
 function Aside({
   setAsideWidth,
@@ -57,7 +65,7 @@ function Aside({
             },
             { name: 'APPS & PAGES', type: 'SectionTitleNav' },
             {
-              icon: <FontPagesSVG />,
+              icon: <EcommereceSVG />,
               name: 'Ecommerce',
               type: 'normal',
               list: [
@@ -93,6 +101,7 @@ function Aside({
               ],
             },
             {
+              icon: <AcademySVG />,
               name: 'Academy',
               type: 'normal',
               list: [
@@ -102,6 +111,7 @@ function Aside({
               ],
             },
             {
+              icon: <LogisticsSVG />,
               name: 'Logistics',
               type: 'normal',
               list: [
@@ -109,10 +119,11 @@ function Aside({
                 { name: 'Fleet', type: 'last' },
               ],
             },
-            { name: 'Email', type: 'normal' }, //TODO :create new type
-            { name: 'Chat', type: 'normal' }, //TODO :create new type
-            { name: 'Calener', type: 'normal' }, //TODO :create new type
+            { icon: <EmailSVG />, name: 'Email', type: 'normal' }, //TODO :create new type
+            { icon: <ChatSVG />, name: 'Chat', type: 'normal' }, //TODO :create new type
+            { icon: <CalederSVG />, name: 'Calener', type: 'normal' }, //TODO :create new type
             {
+              icon: <InvoiceSVG />,
               name: 'Invoice',
               type: 'normal',
               list: [
@@ -123,6 +134,7 @@ function Aside({
               ],
             },
             {
+              icon: <UserSVG />,
               name: 'User',
               type: 'normal',
               list: [
