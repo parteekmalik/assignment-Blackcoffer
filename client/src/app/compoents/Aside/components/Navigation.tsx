@@ -1,8 +1,8 @@
 import { MouseEventHandler, ReactNode, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { NavigationCotext } from './context/NavigationCotext';
-import DefaultSVG from './SVGs/DefaultSVG';
-import ExpendedSVG from './SVGs/ExpendedSVG';
+import DefaultSVG from './SVGs/Aside/DefaultSVG';
+import ExpendedSVG from './SVGs/Aside/ExpendedSVG';
 import DisabledLink from '../../../Routes/DisabledLink';
 
 export type NestedList = {

@@ -1,8 +1,8 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import MainNav from './components/Navigation';
-import DashboardIcon from './components/SVGs/DashboardIcon';
+import DashboardIcon from './components/SVGs/Aside/DashboardIcon';
 import LogoSVG from './components/SVGs/LogoSVG';
-import FontPagesSVG from './components/SVGs/FontPagesSVG';
+import FontPagesSVG from './components/SVGs/Aside/FontPagesSVG';
 import NavigationCotextCoponent from './components/context/NavigationCotext';
 
 function Aside({
