@@ -1,9 +1,6 @@
 import * as ReactDOM from 'react-dom/client';
 
-import {
-  RouterProvider,
-  createBrowserRouter
-} from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Layout from './app/layout';
 import CRM from './app/Routes/Dashboard/CRM';
 import NotFound from './app/Routes/NotFound';
@@ -14,7 +11,7 @@ const router = createBrowserRouter([
     Component: Layout,
     children: [
       {
-        path: 'dashboard/CRM',
+        path: 'dashboard/crm',
         Component: CRM,
       },
       {

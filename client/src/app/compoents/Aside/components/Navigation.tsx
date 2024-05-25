@@ -1,9 +1,9 @@
 import { MouseEventHandler, ReactNode, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import DisabledLink from '../../../Routes/DisabledLink';
 import { NavigationCotext } from './context/NavigationCotext';
 import DefaultSVG from './SVGs/Aside/DefaultSVG';
 import ExpendedSVG from './SVGs/Aside/ExpendedSVG';
-import DisabledLink from '../../../Routes/DisabledLink';
 
 export type NestedList = {
   name: string;
@@ -167,10 +167,7 @@ function DefaultLayout({
         {children}
       </div>
       {ulChildren && (
-        <ul
-          className="display"
-          style={ulChildren.isvisible ? {} : { display: 'none' }}
-        >
+        <ul style={ulChildren.isvisible ? {} : { display: 'none' }}>
           {ulChildren.list}
         </ul>
       )}
