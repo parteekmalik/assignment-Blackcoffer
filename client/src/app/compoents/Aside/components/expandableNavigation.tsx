@@ -1,9 +1,6 @@
 import { MouseEventHandler, ReactNode, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {
-  machPartialString,
-  NavigationCotext,
-} from './context/NavigationCotext';
+import { NavigationCotext } from './context/NavigationCotext';
 import DefaultSVG from './SVGs/DefaultSVG';
 import ExpendedSVG from './SVGs/ExpendedSVG';
 import DisabledLink from '../../../Routes/DisabledLink';
@@ -17,7 +14,8 @@ export type NestedList = {
 
 function MainNav({ navigation }: { navigation: NestedList[] }) {
   const { pathname } = useLocation();
-  const { modifyPath, currNavigation } = useContext(NavigationCotext);
+  const { modifyPath, currNavigation, isPathOpened } =
+    useContext(NavigationCotext);
 
   const renderList = ({
     item,
@@ -44,7 +42,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
     } else if (item.type === 'last') {
       return (
         <NavLink
-          isSelected={machPartialString({ currNavigation: pathname, link })}
+          isSelected={isPathOpened({ currNavigation: pathname, link })}
           Name={item.name}
           onClick={() => modifyPath(link)}
           link={link}
@@ -63,7 +61,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
       <DisabledLink disabled={item.list ? true : false} to={link}>
         <ExpandableNav
           isSelected={link === pathname}
-          isOpened={machPartialString({ currNavigation, link })}
+          isOpened={isPathOpened({ currNavigation, link })}
           onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)}
           headTitle={item.name}
           icon={depth >= 0 && !item.icon ? <DefaultSVG /> : item.icon}
