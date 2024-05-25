@@ -6,6 +6,7 @@ import {
 } from './context/NavigationCotext';
 import DefaultSVG from './SVGs/DefaultSVG';
 import ExpendedSVG from './SVGs/ExpendedSVG';
+import DisabledLink from '../../../Routes/DisabledLink';
 
 export type NestedList = {
   name: string;
@@ -24,11 +25,23 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
     link,
   }: {
     link: string;
-    item: NestedList;
+    item: NestedList | NestedList[];
     // list: NestedList<string>;
     depth: number;
-  }) => {
-    if (item.type === 'last') {
+  }): React.ReactNode => {
+    if (Array.isArray(item)) {
+      return (
+        <>
+          {item.map((item, index) =>
+            renderList({
+              item,
+              depth: depth + 1,
+              link: '/' + item.name.toLowerCase().replace(' ', '-'),
+            })
+          )}
+        </>
+      );
+    } else if (item.type === 'last') {
       return (
         <NavLink
           isSelected={machPartialString({ currNavigation: pathname, link })}
@@ -46,39 +59,33 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
           </span>
         </li>
       );
-    else if (item.type === 'normal')
-      return (
-        <>
-          <ExpandableNav
-            isOpened={machPartialString({ currNavigation, link })}
-            onClick={() => modifyPath(link)}
-            headTitle={item.name}
-            icon={depth >= 0 && !item.icon ? <DefaultSVG /> : item.icon}
-          >
-            {item.list &&
-              item.list.map((Item, index) => {
-                return renderList({
-                  item: Item,
-                  depth: depth + 1,
-                  link: link + '/' + Item.name.toLowerCase().replace(' ', '-'),
-                });
-              })}
-          </ExpandableNav>
-        </>
-      );
+    return (
+      <DisabledLink disabled={item.list ? true : false} to={link}>
+        <ExpandableNav
+          isSelected={link === pathname}
+          isOpened={machPartialString({ currNavigation, link })}
+          onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)}
+          headTitle={item.name}
+          icon={depth >= 0 && !item.icon ? <DefaultSVG /> : item.icon}
+        >
+          {item.list &&
+            item.list.map((Item, index) => {
+              return renderList({
+                item: Item,
+                depth: depth + 1,
+                link: link + '/' + Item.name.toLowerCase().replace(' ', '-'),
+              });
+            })}
+        </ExpandableNav>
+      </DisabledLink>
+    );
   };
   return (
     <ul
       className=" text-AsideText w-full text-[15px] flex flex-col overflow-hidden hover:scroll overflow-y-scroll scrollbar grow"
       style={{ scrollbarWidth: 'thin' }}
     >
-      {navigation.map((item) =>
-        renderList({
-          item,
-          depth: -1,
-          link: '/' + item.name.toLowerCase().replace(' ', '-'),
-        })
-      )}
+      {renderList({ item: navigation, depth: 0, link: '' })}
     </ul>
   );
 }
@@ -89,17 +96,20 @@ function ExpandableNav({
   children,
   headTitle,
   onClick,
+  isSelected,
 }: {
   isOpened: boolean;
   icon: ReactNode;
   onClick?: MouseEventHandler<HTMLDivElement>;
   children: ReactNode | ReactNode[];
   headTitle: string;
+  isSelected: boolean;
 }) {
   return (
     <DefaultLayout
       onClick={onClick}
       ulChildren={{ list: children, isvisible: isOpened }}
+      isSelected={isSelected}
     >
       {icon}
       <span>{headTitle}</span>
