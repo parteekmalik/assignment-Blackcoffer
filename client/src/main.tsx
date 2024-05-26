@@ -1,30 +1,34 @@
 import * as ReactDOM from 'react-dom/client';
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Layout from './app/layout';
-import CRM from './app/Routes/Dashboard/CRM';
-import NotFound from './app/Routes/NotFound';
+import React, { Suspense } from 'react';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    Component: Layout,
+    Component: React.lazy(() => import('./app/layout')),
     children: [
       {
         path: 'dashboard/crm',
-        Component: CRM,
+        Component: React.lazy(() => import('./app/Routes/Dashboard/CRM')),
       },
       {
         path: '*',
-        Component: NotFound,
+        Component: React.lazy(() => import('./app/Routes/NotFound')),
       },
     ],
   },
 ]);
+
 function App() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router}></RouterProvider>;
 }
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-root.render(<App />);
+root.render(
+  <Suspense fallback={<div>Loading...</div>}>
+    <App />
+  </Suspense>
+);

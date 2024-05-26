@@ -24,8 +24,8 @@ function Aside({
       style={{ width: size + 'px' }}
       className={
         'fixed  border-black  h-screen flex flex-col border-r ' +
-        ' desktop:translate-x-[0px] laptop:translate-x-[-260px] tablet:translate-x-[-260px] mobile:translate-x-[-260px] ' +
-        '' // 'desktop:bg-black laptop:bg-purple-400 tablet:bg-yellow-300 mobile:bg-green-400'
+        ' desktop:translate-x-[0px] laptop:translate-x-[-260px] tablet:translate-x-[-260px] mobile:translate-x-[-260px] '
+        // + 'desktop:bg-black laptop:bg-purple-400 tablet:bg-yellow-300 mobile:bg-green-400'
       }
     >
       <div className="flex gap-2 p-[20px_2px_20px_8px] items-end mx-[12px]">
