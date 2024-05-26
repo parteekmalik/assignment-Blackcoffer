@@ -1,35 +1,40 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import SearchSVG from './Aside/components/SVGs/SearchSVG';
+import PopupDialog from './SearchModal/PopupDialog';
+import SearchModal from './SearchModal/SearchModal';
 
 function Header({
   headingRef,
 }: {
   headingRef?: React.MutableRefObject<HTMLElement | null>;
 }) {
+  const [issearchPopup, setissearchPopup] = useState(false);
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+      event.preventDefault();
+      setissearchPopup(true);
+    }
+  };
+
+  useLayoutEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   return (
     <header
       ref={headingRef}
       className="sticky top-0 w-full px-10 py-2 "
       style={{ insetBlockStart: '1rem' }}
     >
-      <div className="rounded flex  border-2 border-black p-2  ">
-        <div className=" flex justify-center items-center gap-3 hover:cursor-pointer text-[15px]  ">
-          <div className="rounded-full hover:bg-slate-400 w-[38px] h-[38px] flex justify-center items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              className=""
-            >
-              <path
-                fill="none"
-                stroke="black"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0m18 11l-6-6"
-              />
-            </svg>
+      <div className="rounded-lg flex border    p-2  ">
+        <div
+          className=" flex justify-center items-center gap-3 hover:cursor-pointer text-[15px]  "
+          onClick={() => setissearchPopup(true)}
+        >
+          <div className="rounded-full hover:bg-lightBlack hover:bg-opacity-10 w-[38px] h-[38px] flex justify-center items-center">
+            <SearchSVG />
           </div>
           <div className="opacity-[.4] items-center flex gap-2">
             <span>Search</span>
@@ -37,6 +42,11 @@ function Header({
           </div>
         </div>
       </div>
+      {issearchPopup && (
+        <PopupDialog closeFn={() => setissearchPopup(false)}>
+          <SearchModal />
+        </PopupDialog>
+      )}
     </header>
   );
 }

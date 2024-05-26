@@ -12,15 +12,20 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        mobile: '0px',
+        tablet: '600px',
+        laptop: '960px',
+        desktop: '1280px',
+      },
       colors: {
         'main-purple': '#7367F0',
         hoverColor: '#f4f3f4',
-        AsideText: '#2f2b3de6',
-        AsideNavSectionText: '#2f2b3d66',
+        lightBlack: '#2f2b3d',
       },
-      text:{
-        "custom-sm":".8125rem"
-      }
+      text: {
+        'custom-sm': '.8125rem',
+      },
     },
   },
   plugins: [],

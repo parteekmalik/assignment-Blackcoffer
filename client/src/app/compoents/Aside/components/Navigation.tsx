@@ -52,7 +52,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
     } else if (item.type === 'SectionTitleNav')
       return (
         <li>
-          <span className=" text-AsideText p-[0px_12px] m-[16px_12px_6px] text-custom-sm opacity-[.4]">
+          <span className=" text-lightBlack opacity-[.9] p-[0px_12px] m-[16px_12px_6px] text-custom-sm opacity-[.4]">
             {item.name}
           </span>
         </li>
@@ -110,7 +110,7 @@ function ExpandableNav({
       isSelected={isSelected}
     >
       {icon}
-      <span className="text-AsideText">{headTitle}</span>
+      <span className="text-lightBlack opacity-[.9]">{headTitle}</span>
       {children && (
         <i className={' ml-auto ' + (isOpened ? 'rotate-90' : '')}>
           <ExpendedSVG />
@@ -137,7 +137,11 @@ function NavLink(props: {
           marginLeft={5 + 10 * props.depth}
           isSelected={props.isSelected}
         />
-        <span className={!props.isSelected ? 'text-AsideText' : 'text-white'}>
+        <span
+          className={
+            !props.isSelected ? 'text-lightBlack opacity-[.9]' : 'text-white'
+          }
+        >
           {props.Name}
         </span>
       </DefaultLayout>

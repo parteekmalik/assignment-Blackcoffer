@@ -14,23 +14,19 @@ import UserSVG from './components/SVGs/Aside/UserSVG';
 import EcommereceSVG from './components/SVGs/Aside/EcommereceSVG';
 
 function Aside({
-  setAsideWidth,
+  size = 260,
 }: {
-  setAsideWidth: React.Dispatch<React.SetStateAction<number>>;
+  size?: number | string;
+  setAsideWidth?: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const AsideRef = useRef<HTMLElement | null>(null);
-  useLayoutEffect(() => {
-    setAsideWidth(AsideRef.current?.getBoundingClientRect().width ?? 0);
-    setInterval(
-      () => setAsideWidth(AsideRef.current?.getBoundingClientRect().width ?? 0),
-      1000
-    );
-    console.log(AsideRef.current?.getBoundingClientRect());
-  }, []);
   return (
     <aside
-      ref={AsideRef}
-      className="fixed w-[260px] border-black  h-screen flex flex-col border-r"
+      style={{ width: size + 'px' }}
+      className={
+        'fixed  border-black  h-screen flex flex-col border-r ' +
+        ' desktop:translate-x-[0px] laptop:translate-x-[-260px] tablet:translate-x-[-260px] mobile:translate-x-[-260px] ' +
+        '' // 'desktop:bg-black laptop:bg-purple-400 tablet:bg-yellow-300 mobile:bg-green-400'
+      }
     >
       <div className="flex gap-2 p-[20px_2px_20px_8px] items-end mx-[12px]">
         <LogoSVG />

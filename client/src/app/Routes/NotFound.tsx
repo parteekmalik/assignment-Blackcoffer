@@ -7,6 +7,7 @@ function NotFound() {
     <>
       <div>NotFound</div>
       <div>{location.pathname}</div>
+      <div className='h[3000px]'></div>
     </>
   );
 }
