@@ -1,7 +1,12 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import SearchSVG from './Aside/components/SVGs/SearchSVG';
 import PopupDialog from './SearchModal/PopupDialog';
 import SearchModal from './SearchModal/SearchModal';
+import CloseSVG from './Aside/components/SVGs/CloseSVG';
+import {
+  DeviceTypeContext,
+  useDeviceType,
+} from '../../Context/DeviceType/DeviceType';
 
 function Header({
   headingRef,
@@ -9,12 +14,15 @@ function Header({
   headingRef?: React.MutableRefObject<HTMLElement | null>;
 }) {
   const [issearchPopup, setissearchPopup] = useState(false);
+  const { setisNavOpened } = useContext(DeviceTypeContext);
+
   const handleKeyDown = (event: KeyboardEvent) => {
     if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
       event.preventDefault();
       setissearchPopup(true);
     }
   };
+  const { deviceType } = useDeviceType();
 
   useLayoutEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -25,10 +33,19 @@ function Header({
   return (
     <header
       ref={headingRef}
-      className="sticky top-0 w-full px-10 py-2 "
+      className="sticky max-w-[1440px]  mx-auto top-0 w-full  "
       style={{ insetBlockStart: '1rem' }}
     >
-      <div className="rounded-lg flex border    p-2  ">
+      <div className="rounded-lg flex bg-white border px-10 py-2 shadow-md  p-2  ">
+        <div
+          onClick={() => (setisNavOpened ? setisNavOpened(true) : {})}
+          className={
+            'flex  justify-center items-center gap-3 h-auto hover:cursor-pointer text-[15px] ' +
+            (deviceType === 'desktop' ? ' hidden ' : '')
+          }
+        >
+          <CloseSVG />
+        </div>
         <div
           className=" flex justify-center items-center gap-3 hover:cursor-pointer text-[15px]  "
           onClick={() => setissearchPopup(true)}

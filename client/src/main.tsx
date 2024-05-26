@@ -2,6 +2,7 @@ import * as ReactDOM from 'react-dom/client';
 
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import React, { Suspense } from 'react';
+import { DeviceTypeProvider } from './Context/DeviceType/DeviceType';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Suspense fallback={<div>Loading...</div>}>
-    <App />
+    <DeviceTypeProvider>
+      <App />
+    </DeviceTypeProvider>
   </Suspense>
 );

@@ -20,11 +20,13 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
   const renderList = ({
     item,
     depth,
+    index,
     link,
   }: {
     link: string;
     item: NestedList | NestedList[];
     // list: NestedList<string>;
+    index: number;
     depth: number;
   }): React.ReactNode => {
     if (Array.isArray(item)) {
@@ -35,6 +37,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
               item,
               depth: depth + 1,
               link: '/' + item.name.toLowerCase().replace(' ', '-'),
+              index,
             })
           )}
         </>
@@ -42,6 +45,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
     } else if (item.type === 'last') {
       return (
         <NavLink
+          key={depth + link + index}
           isSelected={isPathOpened({ currNavigation: pathname, link })}
           Name={item.name}
           onClick={() => modifyPath(link)}
@@ -51,14 +55,18 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
       );
     } else if (item.type === 'SectionTitleNav')
       return (
-        <li>
+        <li key={depth + link + index}>
           <span className=" text-lightBlack  p-[0px_12px] m-[16px_12px_6px] text-custom-sm opacity-[.4]">
             {item.name}
           </span>
         </li>
       );
     return (
-      <DisabledLink disabled={item.list ? true : false} to={link}>
+      <DisabledLink
+        key={depth + link + index}
+        disabled={item.list ? true : false}
+        to={link}
+      >
         <ExpandableNav
           isSelected={link === pathname}
           isOpened={isPathOpened({ currNavigation, link })}
@@ -72,6 +80,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
                 item: Item,
                 depth: depth + 1,
                 link: link + '/' + Item.name.toLowerCase().replace(' ', '-'),
+                index,
               });
             })}
         </ExpandableNav>
@@ -83,7 +92,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
       className=" text-black w-full text-[15px] flex flex-col overflow-hidden hover:scroll overflow-y-scroll scrollbar grow"
       style={{ scrollbarWidth: 'thin' }}
     >
-      {renderList({ item: navigation, depth: 0, link: '' })}
+      {renderList({ item: navigation, depth: 0, link: '', index: 0 })}
     </ul>
   );
 }

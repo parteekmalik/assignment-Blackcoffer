@@ -10,7 +10,7 @@ function ModalDiv({
   style?: React.CSSProperties;
 }) {
   return (
-    <div className={`p-[12px] shadow-sm ${className}`} style={style}>
+    <div className={`p-[12px]  ${className}`} style={style}>
       {children}
     </div>
   );
