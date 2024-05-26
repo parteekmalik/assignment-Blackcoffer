@@ -13,7 +13,7 @@ function DefaultSVG({
 }) {
   return (
     <svg
-      className={' ' + (isSelected === true ? 'text-white ' : 'text-black')}
+      className={' ' + (isSelected === true ? 'text-white ' : ' text-inherit')}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       width={size}

@@ -11,7 +11,7 @@ function CalederSVG() {
     >
       <path
         fill="none"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"

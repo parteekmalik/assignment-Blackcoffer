@@ -11,7 +11,7 @@ function FontPagesSVG({ size = 22 }: { size?: number }) {
     >
       <g
         fill="none"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5"
