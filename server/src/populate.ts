@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 // import { formatISO, parse } from "date-fns";
-import { jsondata } from "./jsondata";
+import { jsondata } from "./data/jsondata";
 
 const prisma = new PrismaClient();
 
