@@ -49,7 +49,7 @@ const Modal: React.FC<ModalProps> = ({ item }) => {
           <strong>Published:</strong> {item.published}
         </p> */}
         <button
-          className=" mt-auto   text-white bg-main-purple rounded-lg py-1"
+          className=" mt-auto  hover:bg-hoverColor hover:text-main-purple border-1 shadow-sm  text-white bg-main-purple rounded-lg py-1"
           onClick={(e) => window.open(item.url, '_blank')}
         >
           Read Now

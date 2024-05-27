@@ -3,15 +3,11 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 // Define the type for our context
 interface DeviceTypeContextProps {
   deviceType: TdeviceType;
-  isNavOpened: boolean;
-  setisNavOpened: React.Dispatch<React.SetStateAction<boolean>> | null;
 }
 
 // Create the context with an initial value
 export const DeviceTypeContext = createContext<DeviceTypeContextProps>({
   deviceType: 'desktop',
-  isNavOpened: false,
-  setisNavOpened: null,
 });
 
 // Create a custom hook to use the DeviceTypeContext
@@ -24,12 +20,12 @@ export const useDeviceType = () => {
 };
 type TdeviceType = 'mobile' | 'tablet' | 'laptop' | 'desktop';
 // Create a provider component
+
 export const DeviceTypeProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [deviceType, setDeviceType] = useState<TdeviceType>('desktop');
-  const [isNavOpened, setisNavOpened] = useState(false);
-  useEffect(() => console.log('isNavOpened', isNavOpened), [isNavOpened]);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 600) {
@@ -50,9 +46,7 @@ export const DeviceTypeProvider: React.FC<{
   }, []);
 
   return (
-    <DeviceTypeContext.Provider
-      value={{ deviceType, isNavOpened, setisNavOpened }}
-    >
+    <DeviceTypeContext.Provider value={{ deviceType }}>
       {children}
     </DeviceTypeContext.Provider>
   );

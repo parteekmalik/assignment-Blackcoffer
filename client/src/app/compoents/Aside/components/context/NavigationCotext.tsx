@@ -1,7 +1,7 @@
 // context/todoContext.tsx
 import React, { useEffect, useState } from 'react';
-import { NestedList } from '../Navigation';
 import { useLocation } from 'react-router-dom';
+import { NestedList } from '../Navigation';
 
 export type NavigationCotextType = {
   currNavigation: string;
@@ -13,6 +13,9 @@ export type NavigationCotextType = {
     currNavigation: string;
     link: string;
   }): boolean;
+  isNavOpened: boolean;
+  NavData: NestedList[];
+  setisNavOpened: React.Dispatch<React.SetStateAction<boolean>> | null;
 };
 
 export const NavigationCotext = React.createContext<NavigationCotextType>({
@@ -27,6 +30,9 @@ export const NavigationCotext = React.createContext<NavigationCotextType>({
   }) => {
     return true;
   },
+  isNavOpened: false,
+  setisNavOpened: null,
+  NavData: [],
 });
 // NavigationCotext
 const NavigationCotextCoponent: React.FC<{
@@ -38,7 +44,27 @@ const NavigationCotextCoponent: React.FC<{
     setcurrNavigation(pathname);
     setpathnameNavigation(pathname);
   }, [pathname]);
-
+  const [isNavOpened, setisNavOpened] = useState(false);
+  const [NavData, setNavData] = useState<NestedList[]>([]);
+  useEffect(() => {
+    const NavSet = async () => {
+      fetch('http://localhost:3000/api/getNavData')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data: NestedList[]) => {
+          setNavData(data);
+        });
+    };
+    NavSet();
+  }, []);
+  useEffect(
+    () => console.log('isNavOpened', isNavOpened, NavData),
+    [isNavOpened, NavData]
+  );
   const [currNavigation, setcurrNavigation] = useState('');
   const [pathnameNavigation, setpathnameNavigation] = useState('');
   function modifyPath(link: string) {
@@ -82,6 +108,9 @@ const NavigationCotextCoponent: React.FC<{
         currNavigation,
         modifyPath,
         isPathOpened,
+        isNavOpened,
+        setisNavOpened,
+        NavData,
       }}
     >
       {isdebug && <div>{currNavigation}</div>}

@@ -4,10 +4,11 @@ import DisabledLink from '../../../Routes/DisabledLink';
 import { NavigationCotext } from './context/NavigationCotext';
 import DefaultSVG from './SVGs/Aside/DefaultSVG';
 import ExpendedSVG from './SVGs/Aside/ExpendedSVG';
+import IconSVGs, { IconType } from './SVGs/IconSVGs';
 
 export type NestedList = {
   name: string;
-  icon?: ReactNode;
+  icon?: IconType;
   list?: NestedList[];
   type: 'normal' | 'last' | 'SectionTitleNav';
 };
@@ -72,7 +73,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
           isOpened={isPathOpened({ currNavigation, link })}
           onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)}
           headTitle={item.name}
-          icon={depth >= 0 && !item.icon ? <DefaultSVG /> : item.icon}
+          icon={depth >= 0 && !item.icon ? '' : item.icon}
         >
           {item.list &&
             item.list.map((Item, index) => {
@@ -106,7 +107,7 @@ function ExpandableNav({
   isSelected,
 }: {
   isOpened: boolean;
-  icon: ReactNode;
+  icon: IconType;
   onClick?: MouseEventHandler<HTMLDivElement>;
   children: ReactNode | ReactNode[];
   headTitle: string;
@@ -118,7 +119,7 @@ function ExpandableNav({
       ulChildren={{ list: children, isvisible: isOpened }}
       isSelected={isSelected}
     >
-      {icon}
+      <IconSVGs icon={icon} />
       <span className="">{headTitle}</span>
       {children && (
         <i className={' ml-auto ' + (isOpened ? 'rotate-90' : '')}>
