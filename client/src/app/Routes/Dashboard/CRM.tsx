@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import ModalDiv from '../../compoents/Modal/ModalDiv';
 import Modal from './Item';
+import Filter from './Filter';
 
 interface LayoutProps {}
 export type dataType = {
@@ -33,19 +34,22 @@ export type FilterDataType = Record<
 >;
 const CRM: React.FC<LayoutProps> = ({}) => {
   const location = useLocation();
-  const [isFiler, setisFilter] = useState(false);
-  const [FilterData, setFilterData] = useState<FilterDataType | null>(null);
+  const [FilterData, setFilterData] = useState<FilterDataType>({});
+
   const [Data, setData] = useState<dataType[]>([]);
   useEffect(() => {
     loadMore(50);
   }, []);
-  const loadMore = (len: number) => {
+  const loadMore = (len: number, Filter?: string) => {
     fetch(
       'http://localhost:3000/api?skip=' +
         Data.length +
         '&take=' +
         len +
-        (FilterData === null ? '&FilterData=true' : '&FilterData=false')
+        (Filter ?? '') +
+        (Object.keys(FilterData).length === 0
+          ? '&FilterData=true'
+          : '&FilterData=false')
     )
       .then((response) => {
         if (!response.ok) {
@@ -58,14 +62,10 @@ const CRM: React.FC<LayoutProps> = ({}) => {
         if (data.FilterData) setFilterData(data.FilterData);
       });
   };
+
   return (
     <div className="flex flex-wrap items-stretch ">
-      <div className="basis-full  flex flex-col justify-end  text-white py-2">
-        <span className="bg-main-purple self-end text-lg mr-[12px] hover:cursor-pointer py-2 px-4 rounded-lg ">
-          Filter
-        </span>
-        <div className=""></div>
-      </div>
+      <Filter FilterData={FilterData} />
       {Data.map((item, index) => {
         return (
           <ModalDiv
