@@ -36,7 +36,7 @@ const NavigationCotextCoponent: React.FC<{
     const [NavData, setNavData] = useState<NestedList[]>([]);
     useEffect(() => {
         const NavSet = async () => {
-            fetch("http://localhost:3000/api/getNavData")
+            fetch(import.meta.env.BACKEND_URL + "/api/getNavData")
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error("Network response was not ok");

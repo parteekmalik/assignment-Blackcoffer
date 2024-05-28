@@ -39,7 +39,7 @@ const CRM: React.FC<LayoutProps> = ({}) => {
         loadMore(50);
     }, []);
     const loadMore = (len: number, Filter?: string) => {
-        fetch("http://localhost:3000/api?skip=" + Data.length + "&take=" + len + (Filter ?? "") + (Object.keys(FilterData).length === 0 ? "&FilterData=true" : "&FilterData=false"))
+        fetch(import.meta.env.BACKEND_URL + "/api?skip=" + Data.length + "&take=" + len + (Filter ?? "") + (Object.keys(FilterData).length === 0 ? "&FilterData=true" : "&FilterData=false"))
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
