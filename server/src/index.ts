@@ -38,5 +38,5 @@ app.get("/ping", async (req, res) => {
     res.status(200).send("hi");
 });
 app.listen(port, () => {
-    return console.log(`Express is listening at http://localhost:${port}`);
+    return console.log(`Express is listening at http://localhost:${process.env.PORT}`);
 });
