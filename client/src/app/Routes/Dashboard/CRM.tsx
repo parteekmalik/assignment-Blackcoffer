@@ -87,7 +87,7 @@ const CRM: React.FC<LayoutProps> = ({}) => {
                 {Data.list.length ? (
                     Data.list.map((item, index) => (
                         <ModalDiv key={index} className="w-full mobile:basis-full tablet:basis-1/2 laptop:basis-1/2 desktop:basis-1/3">
-                            <div className="p-6 flex min-w-[270px] flex-col text-lightBlack h-full shadow-lg border rounded">
+                            <div className="p-6 flex min-w-[270px] flex-col text-lightBlack h-full shadow-lg hover:scale-110 hover:relative bg-white border rounded">
                                 <Modal item={item} />
                             </div>
                         </ModalDiv>
