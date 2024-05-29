@@ -34,6 +34,9 @@ app.get("/api", async (req, res) => {
 app.get("/api/getNavData", async (req, res) => {
     res.json(NavData);
 });
+app.get("/ping", async (req, res) => {
+    res.status(200).send("hi");
+});
 app.listen(port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
 });

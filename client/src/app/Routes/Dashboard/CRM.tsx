@@ -42,7 +42,8 @@ const CRM: React.FC<LayoutProps> = ({}) => {
   }, []);
   const loadMore = (len: number, Filter?: string) => {
     fetch(
-      'http://localhost:3000/api?skip=' +
+      import.env.BACKEND_URL +
+        '/api?skip=' +
         Data.length +
         '&take=' +
         len +
