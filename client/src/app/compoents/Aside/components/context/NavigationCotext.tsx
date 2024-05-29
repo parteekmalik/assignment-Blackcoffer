@@ -26,8 +26,8 @@ export const NavigationCotext = React.createContext<NavigationCotextType>({
 // NavigationCotext
 const NavigationCotextCoponent: React.FC<{
     children: React.ReactNode;
-    isdebug: boolean;
-}> = ({ children, isdebug }) => {
+    isDebug: boolean;
+}> = ({ children, isDebug }) => {
     const { pathname } = useLocation();
     useEffect(() => {
         setcurrNavigation(pathname);
@@ -92,7 +92,7 @@ const NavigationCotextCoponent: React.FC<{
                 NavData,
             }}
         >
-            {isdebug && <div>{currNavigation}</div>}
+            {isDebug && <div>{currNavigation}</div>}
             {children}
         </NavigationCotext.Provider>
     );
