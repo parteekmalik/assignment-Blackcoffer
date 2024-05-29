@@ -86,7 +86,7 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
                                 { Array.isArray(item) ? (
                                     <div className="overflow-hidden overflow-x-scroll flex" style={{ scrollbarWidth: "thin" }}>
                                         <span
-                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as TListFilter).length ? "bg-main-purple text-white" : "")}
+                                            className={"min-w-[fit-content] hover:bg-hoverColor hover:text-main-purple hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as TListFilter).length ? "bg-main-purple text-white" : "")}
                                             onClick={() => {
                                                 const newState = watch();
                                                 (newState[key] as TListFilter) = [];
@@ -104,7 +104,7 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
                                                     reset({ ...newState });
                                                 }}
                                                 key={option}
-                                                className={"min-w-[fit-content] hover:cursor-pointer ml-1 rounded-lg py-2 px-4 font-semibold " + ((watch()[key] as TListFilter).includes(option) ? "bg-main-purple text-white" : "")}
+                                                className={"hover:bg-hoverColor hover:text-main-purple min-w-[fit-content] hover:cursor-pointer ml-1 rounded-lg py-2 px-4 font-semibold " + ((watch()[key] as TListFilter).includes(option) ? "bg-main-purple text-white" : "")}
                                             >
                                                 {option}
                                             </span>
