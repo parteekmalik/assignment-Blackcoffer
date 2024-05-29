@@ -42,8 +42,8 @@ const CRM: React.FC<LayoutProps> = ({}) => {
     const location = useLocation();
 
     useEffect(() => {
-        loadMore(location.search);
-    }, []);
+        loadMore("&" + location.search.slice(1, location.search.length));
+    }, [location]);
 
     const loadMore = (Filter?: string) => {
         const url = import.meta.env.VITE_BACKEND_URL + "/api?skip=" + (Filter ? 0 : Data.list.length) + "&take=" + 50 + (Filter ?? Data.Filter) + (FilterData === null ? "&FilterData=true" : "&FilterData=false");
@@ -80,6 +80,7 @@ const CRM: React.FC<LayoutProps> = ({}) => {
                 <span onClick={() => setIsFilter((prev) => !prev)} className="bg-main-purple text-white self-end text-lg hover:cursor-pointer py-2 px-4 rounded-lg">
                     Filter
                 </span>
+                {/* {JSON.stringify(FilterData)} */}
                 {FilterData && isFilter && <Filter setIsFilter={setIsFilter} loadMore={loadMore} FilterData={FilterData} />}
             </div>
             <div className="flex flex-wrap items-stretch ">

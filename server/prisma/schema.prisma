@@ -18,21 +18,21 @@ datasource db {
 
 model Data {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  sector     String?
-  topic      String?
+  sector     String
+  topic      String
   insight    String
   url        String
-  region     String?
-  added      String?
-  published  String?
-  country    String?
-  pestle     String?
-  source     String?
+  region     String
+  added      String
+  published  String
+  country    String
+  pestle     String
+  source     String
   title      String
-  end_year   Int?
-  intensity  Int?
-  start_year Int?
-  impact     Int?
-  relevance  Int?
-  likelihood Int?
+  end_year   Int
+  intensity  Int
+  start_year Int
+  impact     Int
+  relevance  Int
+  likelihood Int
 }

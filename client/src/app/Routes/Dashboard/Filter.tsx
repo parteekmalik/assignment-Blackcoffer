@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Location, useLocation, useNavigate } from "react-router-dom";
 import { FilterDataType } from "./CRM";
@@ -7,18 +7,18 @@ const convertToState = (
     filterData: FilterDataType,
     location: Location<any>
 ): {
-    [key: string]: { list: string[]; isNullIncluded: boolean } | { isNullIncluded: boolean; gte: number; lte: number };
+    [key: string]: TListFilter | { isNullIncluded: boolean; gte: number; lte: number };
 } => {
     const params = new URLSearchParams(location.search);
     const newData: {
-        [key: string]: { list: string[]; isNullIncluded: boolean } | { isNullIncluded: boolean; gte: number; lte: number };
+        [key: string]: TListFilter | { isNullIncluded: boolean; gte: number; lte: number };
     } = {};
 
     Object.keys(filterData).forEach((key) => {
         const item = filterData[key];
 
         if (Array.isArray(item)) {
-            newData[key] = params.has(key) ? (JSON.parse(params.get(key) ?? "[]") as { list: string[]; isNullIncluded: boolean }) : { isNullIncluded: true, list: [] };
+            newData[key] = JSON.parse(params.get(key) ?? JSON.stringify([])) as TListFilter;
         } else {
             newData[key] = JSON.parse(
                 params.get(key) ??
@@ -38,7 +38,7 @@ const convertToState = (
     console.log(newData);
     return newData;
 };
-
+type TListFilter = string[];
 type Inputs = ReturnType<typeof convertToState>;
 function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: string) => void; setIsFilter: React.Dispatch<React.SetStateAction<boolean>>; FilterData: FilterDataType }) {
     const navigate = useNavigate();
@@ -58,10 +58,10 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
 
         Object.keys(data).forEach((key) => {
             const item = data[key];
-            if ("list" in item && Array.isArray(item.list)) {
-                queryParams.append(key, JSON.stringify({ list: item.list, isNullIncluded: item.isNullIncluded ? true : item.list.length ? false : true }));
-            } else {
-                queryParams.append(key, JSON.stringify(item));
+            if (Array.isArray(item)) {
+                if (item.length) queryParams.append(key, JSON.stringify(item));
+            } else if ("gte" in item) {
+                if (item.isNullIncluded || Number(item.gte) < (FilterData[key] as { gte: number; lte: number }).gte || Number(item.lte) > (FilterData[key] as { gte: number; lte: number }).lte) queryParams.append(key, JSON.stringify(item));
             }
         });
         navigate({
@@ -71,6 +71,7 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
         loadMore("&" + queryParams.toString());
         setIsFilter(false);
     };
+    // return <>{JSON.stringify}</>
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={"shadow-lg border-2 rounded-lg p-4 text-black flex flex-col "}>
             <div className="grid-rows-10 grid gap-2 grid-cols-4 px-4">
@@ -82,43 +83,28 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
                                 <span className="text-lg font-semibold">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
                             </div>
                             <div className="m-1 p-2 col-span-3">
-                                {"list" in watch()[key] && Array.isArray(item) ? (
+                                { Array.isArray(item) ? (
                                     <div className="overflow-hidden overflow-x-scroll flex" style={{ scrollbarWidth: "thin" }}>
                                         <span
-                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as { list: string[]; isNullIncluded: boolean }).list.length ? "bg-main-purple text-white" : "")}
+                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as TListFilter).length ? "bg-main-purple text-white" : "")}
                                             onClick={() => {
                                                 const newState = watch();
-                                                newState[key] = { isNullIncluded: true, list: [] };
+                                                (newState[key] as TListFilter) = [];
                                                 reset({ ...newState });
                                             }}
                                         >
                                             All
                                         </span>
-                                        <span
-                                            className={
-                                                "min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " +
-                                                ((watch()[key] as { list: string[]; isNullIncluded: boolean }).isNullIncluded || !(watch()[key] as { list: string[]; isNullIncluded: boolean }).list.length ? "bg-main-purple text-white" : "")
-                                            }
-                                            onClick={() => {
-                                                const newState = watch();
-                                                newState[key].isNullIncluded = !newState[key].isNullIncluded;
-
-                                                reset({ ...newState });
-                                            }}
-                                        >
-                                            unknown
-                                        </span>
                                         {item.map((option) => (
                                             <span
                                                 onClick={() => {
                                                     const newState = watch();
-                                                    if ((newState[key] as { list: string[]; isNullIncluded: boolean }).list.includes(option))
-                                                        (newState[key] as { list: string[]; isNullIncluded: boolean }).list = (newState[key] as { list: string[]; isNullIncluded: boolean }).list.filter((i) => i !== option);
-                                                    else (newState[key] as { list: string[]; isNullIncluded: boolean }).list.push(option);
+                                                    if ((newState[key] as TListFilter).includes(option)) (newState[key] as TListFilter) = (newState[key] as TListFilter).filter((i) => i !== option);
+                                                    else (newState[key] as TListFilter).push(option);
                                                     reset({ ...newState });
                                                 }}
                                                 key={option}
-                                                className={"min-w-[fit-content] hover:cursor-pointer ml-1 rounded-lg py-2 px-4 font-semibold " + ((watch()[key] as { list: string[]; isNullIncluded: boolean }).list.includes(option) ? "bg-main-purple text-white" : "")}
+                                                className={"min-w-[fit-content] hover:cursor-pointer ml-1 rounded-lg py-2 px-4 font-semibold " + ((watch()[key] as TListFilter).includes(option) ? "bg-main-purple text-white" : "")}
                                             >
                                                 {option}
                                             </span>
