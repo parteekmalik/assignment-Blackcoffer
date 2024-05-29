@@ -16,7 +16,7 @@ const router = createBrowserRouter([
         Component: React.lazy(() => import('./app/Routes/Dashboard/CRM')),
       },
       {
-        path: '/*',
+        path: '*',
         Component: React.lazy(() => import('./app/Routes/NotFound')),
       },
     ],
