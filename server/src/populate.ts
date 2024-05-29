@@ -24,7 +24,7 @@ function readJsonFile() {
             title: i.title !== "" ? i.title : null,
             topic: i.topic !== "" ? i.topic : null,
             insight: i.insight !== "" ? i.insight : null,
-        } as Data;
+        } as Omit<Data, 'id'>;
     });
 }
 

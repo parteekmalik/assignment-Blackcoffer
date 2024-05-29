@@ -6,23 +6,24 @@ import { useLocation } from "react-router-dom";
 
 interface LayoutProps {}
 export type dataType = {
-    end_year: string;
-    intensity: string;
-    sector: string;
-    topic: string;
+    id: string;
+    sector: string | null;
+    topic: string | null;
     insight: string;
     url: string;
-    region: string;
-    start_year: string;
-    impact: string;
-    added: string;
-    published: string;
-    country: string;
-    relevance: string;
-    pestle: string;
-    source: string;
+    region: string | null;
+    added: string | null;
+    published: string | null;
+    country: string | null;
+    pestle: string | null;
+    source: string | null;
     title: string;
-    likelihood: string;
+    end_year: number | null;
+    intensity: number | null;
+    start_year: number | null;
+    impact: number | null;
+    relevance: number | null;
+    likelihood: number | null;
 };
 export type DataType = { list: dataType[]; Filter: string };
 export type FilterDataType = Record<

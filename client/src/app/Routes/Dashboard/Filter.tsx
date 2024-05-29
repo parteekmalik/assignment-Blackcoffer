@@ -7,7 +7,7 @@ const convertToState = (filterData: FilterDataType, location: Location<any>) => 
     const params = new URLSearchParams(location.search);
     const newData: {
         [key: string]:
-            | string[]
+            | { list: string[]; isNullIncluded: boolean }
             | {
                   isNullIncluded: boolean;
                   gte: number;
@@ -19,8 +19,8 @@ const convertToState = (filterData: FilterDataType, location: Location<any>) => 
         const item = filterData[key];
         newData[key] = Array.isArray(item)
             ? params.has(key)
-                ? (JSON.parse(params.get(key) ?? "") as string[])
-                : []
+                ? { isNullIncluded: true, list: JSON.parse(params.get(key) ?? "") as string[] }
+                : { isNullIncluded: true, list: [] }
             : params.has(key)
             ? (JSON.parse(params.get(key) ?? "") as {
                   isNullIncluded: boolean;
@@ -69,13 +69,6 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
         setIsFilter(false);
     };
 
-    const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-        const item = e.currentTarget;
-        const scrollLeft = item.scrollLeft; // Save current horizontal scroll position
-        item.scrollIntoView({ behavior: "smooth", block: "center" });
-        item.scrollLeft = scrollLeft; // Restore horizontal scroll position after scrolling
-    };
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={"shadow-lg border-2 rounded-lg p-4 text-black flex flex-col "}>
             <div className="grid-rows-10 grid gap-2 grid-cols-4 px-4">
@@ -87,28 +80,40 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
                                 <span className="text-lg font-semibold">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
                             </div>
                             <div className="m-1 p-2 col-span-3">
-                                {Array.isArray(item) ? (
-                                    <div className="overflow-hidden overflow-x-scroll flex" style={{ scrollbarWidth: "thin" }} onMouseEnter={handleMouseEnter}>
+                                {"list" in watch()[key] && Array.isArray(item) ? (
+                                    <div className="overflow-hidden overflow-x-scroll flex" style={{ scrollbarWidth: "thin" }}>
                                         <span
-                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as string[]).length ? "bg-main-purple text-white" : "")}
+                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as { list: string[]; isNullIncluded: boolean }).list.length ? "bg-main-purple text-white" : "")}
                                             onClick={() => {
                                                 const newState = watch();
-                                                newState[key] = [];
+                                                newState[key] = { isNullIncluded: true, list: [] };
                                                 reset({ ...newState });
                                             }}
                                         >
                                             All
                                         </span>
+                                        <span
+                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as { list: string[]; isNullIncluded: boolean }).list.length ? "bg-main-purple text-white" : "")}
+                                            onClick={() => {
+                                                const newState = watch();
+                                                newState[key].isNullIncluded = !newState[key].isNullIncluded;
+
+                                                reset({ ...newState });
+                                            }}
+                                        >
+                                            unknown
+                                        </span>
                                         {item.map((option) => (
                                             <span
                                                 onClick={() => {
                                                     const newState = watch();
-                                                    if ((newState[key] as string[]).includes(option)) newState[key] = (newState[key] as string[]).filter((i) => i !== option);
-                                                    else (newState[key] as string[]).push(option);
+                                                    if ((newState[key] as { list: string[]; isNullIncluded: boolean }).list.includes(option))
+                                                        (newState[key] as { list: string[]; isNullIncluded: boolean }).list = (newState[key] as { list: string[]; isNullIncluded: boolean }).list.filter((i) => i !== option);
+                                                    else (newState[key] as { list: string[]; isNullIncluded: boolean }).list.push(option);
                                                     reset({ ...newState });
                                                 }}
                                                 key={option}
-                                                className={"min-w-[fit-content] hover:cursor-pointer ml-1 rounded-lg py-2 px-4 font-semibold " + ((watch()[key] as string[]).includes(option) ? "bg-main-purple text-white" : "")}
+                                                className={"min-w-[fit-content] hover:cursor-pointer ml-1 rounded-lg py-2 px-4 font-semibold " + ((watch()[key] as { list: string[]; isNullIncluded: boolean }).list.includes(option) ? "bg-main-purple text-white" : "")}
                                             >
                                                 {option}
                                             </span>
@@ -117,8 +122,8 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
                                 ) : (
                                     <div className="flex items-center gap-2">
                                         {/* {JSON.stringify({ ...register(`${key}.lte` as const) })} */}
-                                        <input className="border-2 p-1 w-20 border-black" type="number" {...register(`${key}.lte` as const)} step={1} min={item.lte} max={(watch()[key] as { isNullIncluded: boolean; gte: number; lte: number }).gte} />
-                                        <input className="border-2 p-1 w-20 border-black" type="number" {...register(`${key}.gte` as const)} step={1} min={(watch()[key] as { isNullIncluded: boolean; gte: number; lte: number }).lte} max={item.gte} />
+                                        <input className="border-2 p-1 w-20 border-black" type="number" {...register(`${key}.lte` as const)} step={1} min={(item as { gte: number; lte: number }).lte} max={(watch()[key] as { isNullIncluded: boolean; gte: number; lte: number }).gte} />
+                                        <input className="border-2 p-1 w-20 border-black" type="number" {...register(`${key}.gte` as const)} step={1} min={(watch()[key] as { isNullIncluded: boolean; gte: number; lte: number }).lte} max={(item as { gte: number; lte: number }).gte} />
                                         <div>
                                             <input type="checkbox" {...register(`${key}.isNullIncluded` as const)} className="border-4" />
                                             <span> Does include unknown</span>
