@@ -43,7 +43,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
                 </>
             );
         } else if (item.type === "last") {
-            return <NavLink key={depth + link + index} isSelected={isPathOpened({ currNavigation: pathname, link })} Name={link} onClick={() => modifyPath(link)} link={link} depth={depth}></NavLink>;
+            return <NavLink key={depth + link + index} isSelected={isPathOpened({ currNavigation: pathname, link })} Name={item.name} onClick={() => modifyPath(link)} link={link} depth={depth}></NavLink>;
         } else if (item.type === "SectionTitleNav")
             return (
                 <li key={depth + link + index}>
@@ -52,7 +52,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
             );
         return (
             <DisabledLink key={depth + link + index} disabled={item.list ? true : false} to={link}>
-                <ExpandableNav isSelected={link === pathname} isOpened={isPathOpened({ currNavigation, link })} onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)} headTitle={link} icon={depth >= 0 && !item.icon ? "" : item.icon}>
+                <ExpandableNav isSelected={link === pathname} isOpened={isPathOpened({ currNavigation, link })} onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)} headTitle={item.name} icon={depth >= 0 && !item.icon ? "" : item.icon}>
                     {item.list &&
                         item.list.map((Item, index) => {
                             return renderList({

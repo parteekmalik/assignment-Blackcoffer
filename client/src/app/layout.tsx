@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = () => {
 
     return (
         <div className="flex min-h-screen">
-            <NavigationContextComponent isDebug={true}>
+            <NavigationContextComponent isDebug={false}>
                 <Aside size={AsideWidth} />
             </NavigationContextComponent>
             <div className={"flex grow z-0 p-2 flex-col " + (deviceType === "desktop" ? " pl-[268px] " : " ")}>
