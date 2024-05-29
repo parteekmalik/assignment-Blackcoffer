@@ -3,36 +3,39 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Location, useLocation, useNavigate } from "react-router-dom";
 import { FilterDataType } from "./CRM";
 
-const convertToState = (filterData: FilterDataType, location: Location<any>) => {
+const convertToState = (
+    filterData: FilterDataType,
+    location: Location<any>
+): {
+    [key: string]: { list: string[]; isNullIncluded: boolean } | { isNullIncluded: boolean; gte: number; lte: number };
+} => {
     const params = new URLSearchParams(location.search);
     const newData: {
-        [key: string]:
-            | { list: string[]; isNullIncluded: boolean }
-            | {
-                  isNullIncluded: boolean;
-                  gte: number;
-                  lte: number;
-              };
+        [key: string]: { list: string[]; isNullIncluded: boolean } | { isNullIncluded: boolean; gte: number; lte: number };
     } = {};
-    console.log(params.has("sector"));
+
     Object.keys(filterData).forEach((key) => {
         const item = filterData[key];
-        newData[key] = Array.isArray(item)
-            ? params.has(key)
-                ? { isNullIncluded: true, list: JSON.parse(params.get(key) ?? "") as string[] }
-                : { isNullIncluded: true, list: [] }
-            : params.has(key)
-            ? (JSON.parse(params.get(key) ?? "") as {
-                  isNullIncluded: boolean;
-                  gte: number;
-                  lte: number;
-              })
-            : {
-                  gte: item.gte,
-                  lte: item.lte,
-                  isNullIncluded: false,
-              };
+
+        if (Array.isArray(item)) {
+            newData[key] = params.has(key) ? (JSON.parse(params.get(key) ?? "[]") as { list: string[]; isNullIncluded: boolean }) : { isNullIncluded: true, list: [] };
+        } else {
+            newData[key] = JSON.parse(
+                params.get(key) ??
+                    JSON.stringify({
+                        gte: item.gte,
+                        lte: item.lte,
+                        isNullIncluded: false,
+                    })
+            ) as {
+                isNullIncluded: boolean;
+                gte: number;
+                lte: number;
+            };
+        }
     });
+
+    console.log(newData);
     return newData;
 };
 
@@ -55,8 +58,8 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
 
         Object.keys(data).forEach((key) => {
             const item = data[key];
-            if (Array.isArray(item)) {
-                if (item.length) queryParams.append(key, JSON.stringify(item));
+            if ("list" in item && Array.isArray(item.list)) {
+                queryParams.append(key, JSON.stringify({ list: item.list, isNullIncluded: item.isNullIncluded ? true : item.list.length ? false : true }));
             } else {
                 queryParams.append(key, JSON.stringify(item));
             }
@@ -68,7 +71,6 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
         loadMore("&" + queryParams.toString());
         setIsFilter(false);
     };
-
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={"shadow-lg border-2 rounded-lg p-4 text-black flex flex-col "}>
             <div className="grid-rows-10 grid gap-2 grid-cols-4 px-4">
@@ -93,7 +95,10 @@ function Filter({ FilterData, setIsFilter, loadMore }: { loadMore: (Filter?: str
                                             All
                                         </span>
                                         <span
-                                            className={"min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " + (!(watch()[key] as { list: string[]; isNullIncluded: boolean }).list.length ? "bg-main-purple text-white" : "")}
+                                            className={
+                                                "min-w-[fit-content] hover:cursor-pointer rounded-lg py-2 px-4 font-semibold " +
+                                                ((watch()[key] as { list: string[]; isNullIncluded: boolean }).isNullIncluded || !(watch()[key] as { list: string[]; isNullIncluded: boolean }).list.length ? "bg-main-purple text-white" : "")
+                                            }
                                             onClick={() => {
                                                 const newState = watch();
                                                 newState[key].isNullIncluded = !newState[key].isNullIncluded;

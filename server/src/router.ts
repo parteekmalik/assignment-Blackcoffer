@@ -1,54 +1,68 @@
-import { PrismaClient, Data as DataTypePrisma } from "@prisma/client";
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 import { getFilter } from "./data/getFilter";
 import { NavData } from "./data/NavData";
 
 const prisma = new PrismaClient();
 const router = express.Router();
 
-const Filter: Record<string, string[] | { gte: number; lte: number }> = {};
-
-getFilter(Filter, prisma);
-
-// Define a type for query parameters
+// Define types
 interface QueryParams {
     skip?: string;
     take?: string;
     FilterData?: string;
     [key: string]: any;
 }
-type FilterType = {
-    [key: string]:
-        | string[]
-        | {
-              isNullIncluded: boolean;
-              gte: number;
-              lte: number;
-          };
-};
+
+type FilterType = Record<string, { list: string[]; isNullIncluded: boolean; gte: number; lte: number }>;
+
+// Populate Filter object
+const Filter: FilterType = {};
+
+getFilter(Filter, prisma);
 
 router.get("/api", async (req, res) => {
-    const { skip: S, take: T, FilterData: F, ...rest } = req.query as QueryParams;
-    const skip = parseInt(S as string, 10) || 0; // Default to 0 if not provided
-    const take = parseInt(T as string, 10) || 10; // Default to 10 if not provided
-    const FilterData = F === "true"; // Only true if F is exactly "true"
+    const { skip: skipStr, take: takeStr, FilterData: FilterDataStr, ...rest } = req.query as QueryParams;
+
+    const skip = parseInt(skipStr || "0", 10);
+    const take = parseInt(takeStr || "10", 10);
+    const FilterData = FilterDataStr === "true";
+
     try {
-        // Parsing additional query parameters to JSON if needed
-        const queryParams: FilterType = Object.keys(rest).reduce((acc: Record<string, any>, key) => {
-            acc[key] = JSON.parse(rest[key] as string);
-            return acc;
-        }, {});
+        // Parse additional query parameters
+        const queryParams: FilterType = Object.fromEntries(
+            Object.entries(rest)
+                .map(([key, value]) => {
+                    const parsedValue = JSON.parse(value as string);
+                    return [key, parsedValue];
+                })
+                .filter(Boolean)
+        );
+
         const ArrayQueryParams = Object.fromEntries(
             Object.entries(queryParams)
-                .filter(([_, value]) => Array.isArray(value))
-                .map(([key, value]) => [key, { in: value }])
-        ) as { [k: string]: { in: string[] } };
+                .filter(([_, value]) => Array.isArray(value.list))
+                .map(([key, value]) => {
+                    const IN = value.list.length ? { in: value.list } : null;
+                    const equals = value.isNullIncluded ? { equals: null } : null;
+                    return [key, { ...IN, ...equals }];
+                })
+        );
 
-        const ObjQueryParams = Object.fromEntries(Object.entries(queryParams).filter(([_, value]) => !Array.isArray(value)) as [string, { isNullIncluded: boolean; gte: number; lte: number }][]);
+        const ObjQueryParams = Object.fromEntries(
+            Object.entries(queryParams)
+                .filter(([_, value]) => "list" in value && !Array.isArray(value.list))
+                .map(([key, { isNullIncluded, gte, lte }]) => {
+                    const equals = isNullIncluded ? { equals: null } : null;
+                    return [key, { gte, lte, ...equals }];
+                })
+        );
 
-        console.log({ skip, take, where: { ...ArrayQueryParams }, ObjQueryParams });
-        const data = await prisma.data.findMany({ skip, take, where: { ...ArrayQueryParams } }); // to add ...ObjQueryParams modify
-        // console.log("req received", data.length, Filter);
+        const where = { ...ArrayQueryParams, ...ObjQueryParams };
+        console.log({ skip, take, where });
+
+        const data = await prisma.data.findMany({ skip, take, where });
+
         res.status(200).json(FilterData ? { data, FilterData: Filter } : { data });
     } catch (err) {
         console.error(err);
