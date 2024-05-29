@@ -1,42 +1,31 @@
-import { PrismaClient } from "@prisma/client";
-import express from "express";
 import cors from "cors";
-import { getFilter } from "./data/getFilter";
-import { NavData } from "./data/NavData";
+import express from "express";
+import http from "http";
+import router from "./router";
+// Create a Socket.IO server instance
+const port = Number(process.env.PORT);
 
-const prisma = new PrismaClient();
+const application = express();
+application.use(cors());
 
-const app = express();
+// application.use(cors());
+/** Server Handling */
+const httpServer = http.createServer(application);
 
-const port = 3000;
+/** Log the request */
+application.use((req, res, next) => {
+    if (req.url !== "/ping") {
+        console.info(`METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
-app.use(cors());
-
-const Filter: Record<string, string[] | { gte: number; lte: number }> = {};
-
-getFilter(Filter, prisma);
-
-app.get("/api", async (req, res) => {
-    const { skip: S, take: T, FilterData: F, ...rest } = req.query;
-    const skip = parseInt(S as string, 10) || 0; // Default to 0 if not provided
-    const take = parseInt(T as string, 10) || 10; // Default to 10 if not provided
-    const FilterData = F === "true" ? true : false; // Default to 10 if not provided
-
-    try {
-        const data = await prisma.data.findMany({ skip, take, ...rest });
-        console.log("req received", data.length, Filter);
-        res.status(200).json(FilterData ? { data, FilterData: Filter } : { data });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.on("finish", () => {
+            console.info(`METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
+        });
     }
+
+    next();
 });
-app.get("/api/getNavData", async (req, res) => {
-    res.json(NavData);
-});
-app.get("/ping", async (req, res) => {
-    res.status(200).send("hi");
-});
-app.listen(port, () => {
-    return console.log(`Express is listening at http://localhost:${process.env.PORT}`);
-});
+
+application.use(router);
+
+/** Listen */
+httpServer.listen(port, () => console.info(`Server is running on port ${port}.`));
