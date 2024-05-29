@@ -36,7 +36,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
                         renderList({
                             item,
                             depth: depth + 1,
-                            link: "/#/" + item.name.toLowerCase().replace(" ", "-"),
+                            link: "/" + item.name.toLowerCase().replace(" ", "-"),
                             index,
                         })
                     )}
