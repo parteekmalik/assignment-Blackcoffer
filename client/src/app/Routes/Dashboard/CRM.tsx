@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import ModalDiv from "../../compoents/Modal/ModalDiv";
+import React, { Suspense, useEffect, useState } from "react";
 import Filter from "./Filter";
 import Modal from "./Item";
+import ModalDiv from "../../compoents/Modal/ModalDiv";
+import { useLocation } from "react-router-dom";
 
 interface LayoutProps {}
 export type dataType = {
@@ -23,6 +24,7 @@ export type dataType = {
     title: string;
     likelihood: string;
 };
+export type DataType = { list: dataType[]; Filter: string };
 export type FilterDataType = Record<
     string,
     | string[]
@@ -31,15 +33,21 @@ export type FilterDataType = Record<
           lte: number;
       }
 >;
-const CRM: React.FC<LayoutProps> = ({}) => {
-    const [FilterData, setFilterData] = useState<FilterDataType>({});
 
-    const [Data, setData] = useState<dataType[]>([]);
+const CRM: React.FC<LayoutProps> = ({}) => {
+    const [FilterData, setFilterData] = useState<FilterDataType | null>(null);
+    const [Data, setData] = useState<DataType>({ Filter: "", list: [] });
+    const [isFilter, setIsFilter] = useState(false);
+    const location = useLocation();
+
     useEffect(() => {
-        loadMore(50);
+        loadMore(location.search);
     }, []);
-    const loadMore = (len: number, Filter?: string) => {
-        fetch(import.meta.env.VITE_BACKEND_URL + "/api?skip=" + Data.length + "&take=" + len + (Filter ?? "") + (Object.keys(FilterData).length === 0 ? "&FilterData=true" : "&FilterData=false"))
+
+    const loadMore = (Filter?: string) => {
+        const url = import.meta.env.VITE_BACKEND_URL + "/api?skip=" + (Filter ? 0 : Data.list.length) + "&take=" + 50 + (Filter ?? Data.Filter) + (FilterData === null ? "&FilterData=true" : "&FilterData=false");
+        console.log(url);
+        fetch(url)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -47,24 +55,48 @@ const CRM: React.FC<LayoutProps> = ({}) => {
                 return response.json();
             })
             .then((data: { data: dataType[]; FilterData?: FilterDataType }) => {
-                setData((prev) => [...prev, ...data.data]);
+                if (!Filter)
+                    setData((prev) => {
+                        return { ...prev, list: [...prev.list, ...data.data] };
+                    });
+                else
+                    setData((prev) => {
+                        return { Filter: Filter ?? prev.Filter, list: data.data };
+                    });
                 if (data.FilterData) setFilterData(data.FilterData);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
             });
     };
+    useEffect(() => {
+        console.log(Data);
+    }, [Data]);
 
     return (
-        <div className="flex flex-wrap items-stretch ">
-            <Filter FilterData={FilterData} />
-            {Data.map((item, index) => {
-                return (
-                    <ModalDiv key={index} className="w-full mobile:basis-full tablet:basis-1/2 laptop:basis-1/2  desktop:basis-1/3 ">
-                        <div className="p-6 flex min-w-[270px] flex-col text-lightBlack  h-full   shadow-lg border rounded">
-                            <Modal item={item} />
-                        </div>
+        <div className="flex flex-col w-full  ">
+            <div className=" gap-4 flex flex-col justify-end  py-2">
+                <span onClick={() => setIsFilter((prev) => !prev)} className="bg-main-purple text-white self-end text-lg hover:cursor-pointer py-2 px-4 rounded-lg">
+                    Filter
+                </span>
+                {FilterData && isFilter && <Filter setIsFilter={setIsFilter} loadMore={loadMore} FilterData={FilterData} />}
+            </div>
+            <div className="flex flex-wrap items-stretch ">
+                {Data.list.length ? (
+                    Data.list.map((item, index) => (
+                        <ModalDiv key={index} className="w-full mobile:basis-full tablet:basis-1/2 laptop:basis-1/2 desktop:basis-1/3">
+                            <div className="p-6 flex min-w-[270px] flex-col text-lightBlack h-full shadow-lg border rounded">
+                                <Modal item={item} />
+                            </div>
+                        </ModalDiv>
+                    ))
+                ) : (
+                    <ModalDiv className="w-full basis-full ">
+                        <div className="p-6 flex min-w-[270px] flex-col text-lightBlack h-full shadow-lg border rounded text-center">No Results Found</div>
                     </ModalDiv>
-                );
-            })}
-            <div className="basis-full rounded-lg text-center bg-main-purple hover:cursor-pointer text-white py-2" onClick={() => loadMore(50)}>
+                )}
+            </div>
+            <div className=" rounded-lg text-center bg-main-purple hover:cursor-pointer text-white py-2" onClick={() => loadMore()}>
                 Load More
             </div>
         </div>

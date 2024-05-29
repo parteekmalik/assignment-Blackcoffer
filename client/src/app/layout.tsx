@@ -24,7 +24,7 @@ const Layout: React.FC<LayoutProps> = () => {
       >
         <Header />
         <main
-          className="flex grow justify-center items-start mt-[16px] "
+          className="flex grow justify-center w-full mx-auto items-start mt-[16px] "
           style={{ maxInlineSize: '1440px', marginInline: 'auto' }}
         >
           <Outlet />
