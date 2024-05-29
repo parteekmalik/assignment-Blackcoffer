@@ -12,11 +12,11 @@ const router = createBrowserRouter([
     Component: Layout,
     children: [
       {
-        path: 'dashboard/crm',
+        path: '/dashboard/crm',
         Component: React.lazy(() => import('./app/Routes/Dashboard/CRM')),
       },
       {
-        path: '*',
+        path: '/*',
         Component: React.lazy(() => import('./app/Routes/NotFound')),
       },
     ],
