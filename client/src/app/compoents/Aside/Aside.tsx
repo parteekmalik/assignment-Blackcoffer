@@ -7,9 +7,9 @@ import LogoSVG from "./components/SVGs/LogoSVG";
 
 function Aside({ size = 260 }: { size?: number | string; setAsideWidth?: React.Dispatch<React.SetStateAction<number>> }) {
     const { deviceType } = useDeviceType();
-    const { NavData } = useContext(NavigationCotext);
+    const { NavData, isDebug, currNavigation } = useContext(NavigationCotext);
     const { isNavOpened, setisNavOpened } = useContext(DeviceTypeContext);
-    
+
     return (
         <aside
             className={
@@ -27,6 +27,7 @@ function Aside({ size = 260 }: { size?: number | string; setAsideWidth?: React.D
                         <CloseSVG />
                     </div>
                 </div>
+                {isDebug && <div>{currNavigation}</div>}
                 <MainNav navigation={NavData} />
             </div>
             <div onClick={() => setisNavOpened!(false)} className={"    h-full grow bg-black opacity-[.4] " + (deviceType === "desktop" ? " hidden " : isNavOpened ? "" : " hidden ")}></div>

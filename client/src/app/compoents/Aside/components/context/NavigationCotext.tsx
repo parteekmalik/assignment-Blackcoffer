@@ -8,6 +8,7 @@ export type NavigationCotextType = {
     modifyPath: (link: string) => void;
     isPathOpened({ currNavigation, link }: { currNavigation: string; link: string }): boolean;
     NavData: NestedList[];
+    isDebug: boolean;
 };
 
 export const NavigationCotext = React.createContext<NavigationCotextType>({
@@ -20,7 +21,7 @@ export const NavigationCotext = React.createContext<NavigationCotextType>({
         link;
         return true;
     },
-
+    isDebug: false,
     NavData: [],
 });
 // NavigationCotext
@@ -88,11 +89,10 @@ const NavigationCotextCoponent: React.FC<{
                 currNavigation,
                 modifyPath,
                 isPathOpened,
-
+                isDebug,
                 NavData,
             }}
         >
-            {isDebug && <div>{currNavigation}</div>}
             {children}
         </NavigationCotext.Provider>
     );

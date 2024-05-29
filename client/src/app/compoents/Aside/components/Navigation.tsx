@@ -36,14 +36,14 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
                         renderList({
                             item,
                             depth: depth + 1,
-                            link: "/" + item.name.toLowerCase().replace(" ", "-"),
+                            link: "/#/" + item.name.toLowerCase().replace(" ", "-"),
                             index,
                         })
                     )}
                 </>
             );
         } else if (item.type === "last") {
-            return <NavLink key={depth + link + index} isSelected={isPathOpened({ currNavigation: pathname, link })} Name={item.name} onClick={() => modifyPath(link)} link={link} depth={depth}></NavLink>;
+            return <NavLink key={depth + link + index} isSelected={isPathOpened({ currNavigation: pathname, link })} Name={link} onClick={() => modifyPath(link)} link={link} depth={depth}></NavLink>;
         } else if (item.type === "SectionTitleNav")
             return (
                 <li key={depth + link + index}>
@@ -52,7 +52,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
             );
         return (
             <DisabledLink key={depth + link + index} disabled={item.list ? true : false} to={link}>
-                <ExpandableNav isSelected={link === pathname} isOpened={isPathOpened({ currNavigation, link })} onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)} headTitle={item.name} icon={depth >= 0 && !item.icon ? "" : item.icon}>
+                <ExpandableNav isSelected={link === pathname} isOpened={isPathOpened({ currNavigation, link })} onClick={item.list ? () => modifyPath(link) : () => modifyPath(link)} headTitle={link} icon={depth >= 0 && !item.icon ? "" : item.icon}>
                     {item.list &&
                         item.list.map((Item, index) => {
                             return renderList({
@@ -68,7 +68,7 @@ function MainNav({ navigation }: { navigation: NestedList[] }) {
     };
     return (
         <ul className=" text-black w-full text-[15px] flex flex-col overflow-hidden hover:scroll overflow-y-scroll scrollbar grow" style={{ scrollbarWidth: "thin" }}>
-            {renderList({ item: navigation, depth: 0, link: "#/", index: 0 })}
+            {renderList({ item: navigation, depth: 0, link: "", index: 0 })}
         </ul>
     );
 }
