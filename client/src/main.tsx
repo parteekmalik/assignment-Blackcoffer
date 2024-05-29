@@ -3,12 +3,13 @@ import "./index.css"
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { DeviceTypeProvider } from './Context/DeviceType/DeviceType';
+import Layout from './app/layout';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    Component: React.lazy(() => import('./app/layout')),
+    Component: Layout,
     children: [
       {
         path: 'dashboard/crm',

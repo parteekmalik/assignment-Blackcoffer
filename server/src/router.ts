@@ -73,14 +73,6 @@ router.get("/api", async (req, res) => {
         console.log({ skip, take, where });
 
         const data = await prisma.data.findMany({ skip, take, where });
-        // const data = await prisma.data.findMany({
-        //     skip,
-        //     take,
-        //     where: {
-        //         OR: [{ end_year: { lte: 2200, gte: 2190 } }, { end_year: -1 }],
-        //         start_year: { lte: 2200, gte: 50 },
-        //     },
-        // });
 
         res.status(200).json(FilterData ? { data, FilterData: Filter } : { data });
     } catch (err) {
