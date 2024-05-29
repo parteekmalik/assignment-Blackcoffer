@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useContext, useLayoutEffect, useState } from 'react';
 import SearchSVG from './Aside/components/SVGs/SearchSVG';
 import PopupDialog from './SearchModal/PopupDialog';
 import SearchModal from './SearchModal/SearchModal';

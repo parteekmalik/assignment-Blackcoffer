@@ -1,8 +1,9 @@
 import * as ReactDOM from 'react-dom/client';
-
+import "./index.css"
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { DeviceTypeProvider } from './Context/DeviceType/DeviceType';
+
 
 const router = createBrowserRouter([
   {
