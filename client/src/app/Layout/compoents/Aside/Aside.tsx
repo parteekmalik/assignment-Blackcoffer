@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DeviceTypeContext, useDeviceType } from "../../../Context/DeviceType/DeviceType";
+import { DeviceTypeContext, useDeviceType } from "../../../../Context/DeviceType/DeviceType";
 import { NavigationCotext } from "./components/context/NavigationCotext";
 import MainNav from "./components/Navigation";
 import CloseSVG from "./components/SVGs/CloseSVG";

@@ -6,7 +6,7 @@ import CloseSVG from './Aside/components/SVGs/CloseSVG';
 import {
   DeviceTypeContext,
   useDeviceType,
-} from '../../Context/DeviceType/DeviceType';
+} from '../../../Context/DeviceType/DeviceType';
 
 function Header({
   headingRef,

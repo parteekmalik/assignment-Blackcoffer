@@ -14,7 +14,7 @@ export const getFilter = async (Filter: Record<string, string[] | { gte: number;
     });
     Object.keys(Filter).forEach((key) => {
         const item = Filter[key] as string[];
-        Filter[key] = ["unknown", ...item.filter((i) => i !== "unknown")];
+        Filter[key] = ["unknown", ...item];
     });
 
     const data1 = await prisma.data.findMany({ select: { likelihood: true, relevance: true, impact: true, start_year: true, intensity: true, end_year: true } });
@@ -36,4 +36,5 @@ export const getFilter = async (Filter: Record<string, string[] | { gte: number;
         if (!Array.isArray(Filter.intensity)) Filter.intensity.lte = Math.min(Filter.intensity.lte, Number(i.intensity !== -1 ? i.intensity : Filter.intensity.lte));
     });
     console.log(Filter);
+    return Filter;
 };

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useDeviceType } from "../Context/DeviceType/DeviceType";
-import Header from "./compoents/Header";
-import Footer from "./compoents/Footer";
+import { useDeviceType } from "../../Context/DeviceType/DeviceType";
 import Aside from "./compoents/Aside/Aside";
 import NavigationContextComponent from "./compoents/Aside/components/context/NavigationCotext";
+import Header from "./compoents/Header";
+import Footer from "./compoents/Footer";
 
 interface LayoutProps {}
 

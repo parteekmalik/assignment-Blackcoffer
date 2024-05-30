@@ -15,7 +15,7 @@ const Barchart: React.FC = () => {
     const svgRef = React.useRef<HTMLDivElement | null>(null);
 
     // Function to draw the chart
-    const drawChart = () => {
+    const drawChart = (svgRef: React.MutableRefObject<HTMLDivElement | null>) => {
         if (!svgRef.current) return;
 
         // Clear previous SVG content
@@ -76,15 +76,16 @@ const Barchart: React.FC = () => {
 
     // Use React's useEffect to run D3 code after the component mounts
     React.useEffect(() => {
-        drawChart();
+        drawChart(svgRef);
 
+        const resizeFun = () => drawChart(svgRef);
         // Add event listener to handle window resize
-        window.addEventListener("resize", drawChart);
+        window.addEventListener("resize", resizeFun);
 
         // Cleanup function to remove the svg and event listener when the component unmounts
         return () => {
             d3.select(svgRef.current).selectAll("*").remove();
-            window.removeEventListener("resize", drawChart);
+            window.removeEventListener("resize", resizeFun);
         };
     }, []);
 
