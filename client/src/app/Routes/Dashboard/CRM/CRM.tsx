@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Filter from "./Filter";
 import Modal from "./Item";
-import ModalDiv from "../../compoents/Modal/ModalDiv";
+import ModalDiv from "../../../compoents/Modal/ModalDiv";
 import { useLocation } from "react-router-dom";
 
 interface LayoutProps {}
@@ -46,7 +46,7 @@ const CRM: React.FC<LayoutProps> = ({}) => {
     }, [location]);
 
     const loadMore = (Filter?: string) => {
-        const url = import.meta.env.VITE_BACKEND_URL + "/api?skip=" + (Filter ? 0 : Data.list.length) + "&take=" + 50 + (Filter ?? Data.Filter) + (FilterData === null ? "&FilterData=true" : "&FilterData=false");
+        const url = import.meta.env.VITE_BACKEND_URL + "/api/Filter?skip=" + (Filter ? 0 : Data.list.length) + "&take=" + 50 + (Filter ?? Data.Filter) + (FilterData === null ? "&FilterData=true" : "&FilterData=false");
         console.log(url);
         fetch(url)
             .then((response) => {

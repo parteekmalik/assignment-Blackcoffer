@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 import router from "./router";
+import analyticsRouter from "./analyticsRouter";
 // Create a Socket.IO server instance
 const port = Number(process.env.PORT);
 
@@ -25,7 +26,10 @@ application.use((req, res, next) => {
     next();
 });
 
-application.use(router);
-
+application.use("/api", router);
+application.use("/Analytics", analyticsRouter);
+application.get("/ping", async (req, res) => {
+    res.status(200).send("hi");
+});
 /** Listen */
 httpServer.listen(port, () => console.info(`Server is running on port ${port}.`));

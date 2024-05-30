@@ -21,7 +21,7 @@ const Filter: FilterType = {};
 
 getFilter(Filter, prisma);
 
-router.get("/api", async (req, res) => {
+router.get("/Filter", async (req, res) => {
     const { skip: skipStr, take: takeStr, FilterData: FilterDataStr, ...rest } = req.query as QueryParams;
 
     const skip = parseInt(skipStr || "0", 10);
@@ -81,12 +81,8 @@ router.get("/api", async (req, res) => {
     }
 });
 
-router.get("/api/getNavData", async (req, res) => {
+router.get("/getNavData", async (req, res) => {
     res.json(NavData);
-});
-
-router.get("/ping", async (req, res) => {
-    res.status(200).send("hi");
 });
 
 export default router;
