@@ -1,8 +1,8 @@
-import * as React from "react";
-import PieChart from "./PiGraph";
-import TreedotIcon from "../../../../Layout/compoents/Aside/components/SVGs/TreedotIcon";
 import * as d3 from "d3";
-import { dataType } from "../../CRM/CRM";
+import * as React from "react";
+import TreedotIcon from "../../../../Layout/compoents/Aside/components/SVGs/TreedotIcon";
+import PieChart from "./PiGraph";
+import { motion } from "framer-motion";
 
 interface DataType {
     name: string;
@@ -28,39 +28,30 @@ const CircleChart = ({ url }: { url: string }) => {
             .then((data: DataType[]) => {
                 setformattedData(data.slice(0, 10));
             });
-    },[]);
+    }, []);
     return (
-        <div className=" h-full w-full">
-            <div className="flex justify-between p-2">
-                <div className="flex flex-col">
+        <motion.div className=" h-full w-full flex flex-col justify-center items-center">
+            <motion.div className="flex w-full justify-between p-2">
+                <motion.div className="flex flex-col">
                     <span className="text-xl">{url}</span>
                     <span className="text-xl">{ChartData.length}</span>
-                </div>
-                <div className=" h-full  rounded-full hover:bg-hoverColor p-1">
+                </motion.div>
+                <motion.div className=" h-full  rounded-full hover:bg-hoverColor p-1">
                     <TreedotIcon size={40} />
-                </div>
-            </div>
-            <div className="relative w-[calc(100%-2rem)] p-[2rem]">{formattedData.length && <PieChart formattedData={formattedData} />}</div>
-            <div className="flex flex-wrap w-full flex-col-3 justify-between p-2">
+                </motion.div>
+            </motion.div>
+            <motion.div className="relative w-[calc(100%-2rem)] p-[2rem] ">{formattedData.length && <PieChart formattedData={formattedData} />}</motion.div>
+            <motion.div className="flex flex-wrap w-full flex-col-3 justify-between p-2">
                 {ChartData.map((item) => {
                     return (
-                        <div key={item.name} className="flex basis-1/2 justify-start items-center gap-1">
-                            <div className="w-2 h-2 rounded-full " style={{ backgroundColor: item.color }}></div>
-                            <span className="text-lightBlack min-w-[fit-content]" >{item.name}</span>
-                        </div>
+                        <motion.div key={item.name} className="flex basis-1/2 justify-start items-center gap-1">
+                            <motion.div className="w-2 h-2 rounded-full " style={{ backgroundColor: item.color }}></motion.div>
+                            <span className="text-lightBlack min-w-[fit-content]">{item.name}</span>
+                        </motion.div>
                     );
                 })}
-            </div>
-            {/* {JSON.stringify(formattedData)} */}
-            {/* <div className="absolute z-10 inset-0 flex items-center justify-center">
-                <div className="bg-white w-[calc(100%-4rem)] h-[calc(100%-4rem)] rounded-full flex justify-center items-center">
-                    <div className="flex gap-2 justify-center items-center">
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: hoverItem.color, color: hoverItem.color }}></div>
-                        <span>{hoverItem.name}</span>
-                    </div>
-                </div>
-            </div> */}
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 

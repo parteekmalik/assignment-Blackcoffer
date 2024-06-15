@@ -33,10 +33,10 @@ function Header({
   return (
     <header
       ref={headingRef}
-      className="sticky max-w-[1440px]  mx-auto top-0 w-full  "
+      className="sticky max-w-[1440px] bg-white z-30  mx-auto top-0 w-full  "
       style={{ insetBlockStart: '1rem' }}
     >
-      <div className="rounded-lg flex bg-white border px-10 py-2 shadow-md  p-2  ">
+      <div className="rounded-lg flex  border px-10 py-2 shadow-md  p-2  ">
         <div
           onClick={() => (setisNavOpened ? setisNavOpened(true) : {})}
           className={

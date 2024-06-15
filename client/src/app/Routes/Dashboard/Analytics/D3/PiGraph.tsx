@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import { motion } from "framer-motion";
 
 interface DataType {
     name: string;
@@ -92,9 +93,8 @@ const PieChart = ({ formattedData: data }: { formattedData: DataType[] }) => {
         }
     }, []);
     return (
-        <div ref={svgRef} style={{ width: "100%", height: "100%" }}>
-            <div>Hovered: {hoverItem.name}</div>
-        </div>
+        <motion.div  className="flex justify-center items-center" ref={svgRef} style={{ width: "100%", height: "100%" }}>
+        </motion.div>
     );
 };
 
