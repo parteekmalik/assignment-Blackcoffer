@@ -1,10 +1,9 @@
-import React, { Suspense, useEffect, useState } from "react";
-import Filter from "./Filter";
-import Modal from "./Item";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ModalDiv from "../../Components/Modal/ModalDiv";
-import { MotionConfig } from "framer-motion";
-import { AnimatePresence, motion } from "framer-motion";
+import Filter from "./Filter";
+import Modal from "./Item";
 
 interface LayoutProps {}
 export type dataType = {
@@ -83,7 +82,13 @@ const CRM: React.FC<LayoutProps> = ({}) => {
                     Filter
                 </span>
                 {/* {JSON.stringify(FilterData)} */}
-                {FilterData && isFilter && <Filter setIsFilter={setIsFilter} loadMore={loadMore} FilterData={FilterData} />}
+                <AnimatePresence>
+                    {FilterData && isFilter && (
+                        <motion.div initial={{ height: 0 }} animate={{ height: "auto" }}>
+                            <Filter setIsFilter={setIsFilter} loadMore={loadMore} FilterData={FilterData} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
             <div className="flex flex-wrap items-stretch ">
                 {Data.list.length ? (
