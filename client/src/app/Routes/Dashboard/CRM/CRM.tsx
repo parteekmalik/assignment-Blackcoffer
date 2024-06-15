@@ -3,6 +3,8 @@ import Filter from "./Filter";
 import Modal from "./Item";
 import { useLocation } from "react-router-dom";
 import ModalDiv from "../../Components/Modal/ModalDiv";
+import { MotionConfig } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface LayoutProps {}
 export type dataType = {
@@ -86,14 +88,16 @@ const CRM: React.FC<LayoutProps> = ({}) => {
             <div className="flex flex-wrap items-stretch ">
                 {Data.list.length ? (
                     Data.list.map((item, index) => (
-                        <ModalDiv key={index} className="w-full hover:scale-110 hover:relative mobile:basis-full tablet:basis-1/2 laptop:basis-1/2 desktop:basis-1/3">
-                            <Modal item={item} />
-                        </ModalDiv>
+                        <motion.div whileHover={{ scale: 1.1 }} className="w-full hover:scale-110 hover:relative mobile:basis-full tablet:basis-1/2 laptop:basis-1/2 desktop:basis-1/3">
+                            <ModalDiv key={index}>
+                                <Modal item={item} />
+                            </ModalDiv>
+                        </motion.div>
                     ))
                 ) : (
-                    <ModalDiv className="w-full  basis-full ">
+                    <div className="w-full  basis-full ">
                         <div className=" text-center">No Results Found</div>
-                    </ModalDiv>
+                    </div>
                 )}
             </div>
             <div className=" rounded-lg text-center bg-main-purple hover:cursor-pointer text-white py-2" onClick={() => loadMore()}>
